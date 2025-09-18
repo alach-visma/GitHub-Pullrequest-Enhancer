@@ -254,7 +254,7 @@ class GitHubPREnhancer {
         }
         
         const prdPrefix = window.CONFIG.prdPrefix || 'PRD';
-        const prdRegex = new RegExp(`\\b(?:${prdPrefix}|${prdPrefix.toLowerCase()}|${prdPrefix.toUpperCase()})(?:\\s+|-)(\\d+)\\b`, 'g');
+        const prdRegex = /\b(?:Prd|prd|PRD)(?:\s+|-)(\d+)\b/g;
         const prdLinks = [];
         let match;
         
@@ -284,8 +284,6 @@ class GitHubPREnhancer {
             if (response.ok) {
                 const userData = await response.json();
                 return userData.name || username; // Fall back to username if no full name
-            } else if (response.status === 403) {
-                console.warn(`GitHub PR Enhancer: Rate limit exceeded for GitHub API (60 requests/hour limit for anonymous access)`);
             }
         } catch (error) {
             console.warn(`GitHub PR Enhancer: Failed to fetch full name for ${username}:`, error);
