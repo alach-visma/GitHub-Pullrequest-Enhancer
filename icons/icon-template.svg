@@ -1,0 +1,24 @@
+<!-- GitHub PR Table Enhancer Icon - SVG Template -->
+<!-- Convert this SVG to PNG at 16x16, 48x48, and 128x128 pixels -->
+<svg width="128" height="128" viewBox="0 0 128 128" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background circle -->
+  <circle cx="64" cy="64" r="60" fill="#0969da" stroke="#ffffff" stroke-width="4"/>
+  
+  <!-- Table representation -->
+  <rect x="20" y="30" width="88" height="8" fill="#ffffff" rx="2"/>
+  <rect x="20" y="45" width="88" height="6" fill="#ffffff" rx="1"/>
+  <rect x="20" y="56" width="88" height="6" fill="#ffffff" rx="1"/>
+  <rect x="20" y="67" width="88" height="6" fill="#ffffff" rx="1"/>
+  <rect x="20" y="78" width="88" height="6" fill="#ffffff" rx="1"/>
+  <rect x="20" y="89" width="88" height="6" fill="#ffffff" rx="1"/>
+  
+  <!-- Vertical dividers -->
+  <line x1="35" y1="30" x2="35" y2="95" stroke="#ffffff" stroke-width="1"/>
+  <line x1="55" y1="30" x2="55" y2="95" stroke="#ffffff" stroke-width="1"/>
+  <line x1="80" y1="30" x2="80" y2="95" stroke="#ffffff" stroke-width="1"/>
+  <line x1="95" y1="30" x2="95" y2="95" stroke="#ffffff" stroke-width="1"/>
+  
+  <!-- Enhancement sparkle -->
+  <circle cx="95" cy="35" r="8" fill="#ffd700"/>
+  <path d="M95 30 L97 37 L104 35 L97 38 L95 40 L93 38 L86 35 L93 37 Z" fill="#ffffff"/>
+</svg>
