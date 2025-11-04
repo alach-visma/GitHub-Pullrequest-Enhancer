@@ -196,11 +196,15 @@ class GitHubPREnhancer {
                     data.authorAvatar = avatar.src || avatar.getAttribute('data-src') || '';
                 }
 
-                // Fetch author's full name asynchronously
-                this.fetchAuthorFullName(data.authorUsername).then(fullName => {
+                // Fetch author's full name and avatar asynchronously
+                Promise.all([
+                    this.fetchAuthorFullName(data.authorUsername),
+                    this.fetchAuthorAvatar(data.authorUsername)
+                ]).then(([fullName, avatarUrl]) => {
                     data.authorFullName = fullName;
-                    // Update the displayed name in the table
-                    this.updateAuthorDisplay(data.authorUsername, fullName, data.authorProfile);
+                    data.authorAvatar = avatarUrl || data.authorAvatar; // Use fetched avatar or fall back to extracted one
+                    // Update the displayed name and avatar in the table
+                    this.updateAuthorDisplay(data.authorUsername, fullName, data.authorProfile, avatarUrl || data.authorAvatar);
                 });
             }
 
@@ -291,13 +295,44 @@ class GitHubPREnhancer {
         return username; // Fall back to username on error
     }
 
-    updateAuthorDisplay(username, fullName, profileUrl) {
+    async fetchAuthorAvatar(username) {
+        try {
+            const response = await fetch(`https://api.github.com/users/${username}`);
+            if (response.ok) {
+                const userData = await response.json();
+                return userData.avatar_url || ''; // Return avatar URL or empty string
+            }
+        } catch (error) {
+            console.warn(`GitHub PR Enhancer: Failed to fetch avatar for ${username}:`, error);
+        }
+        return ''; // Fall back to empty string on error
+    }
+
+    updateAuthorDisplay(username, fullName, profileUrl, avatarUrl) {
         // Find all author elements for this username and update them
         const authorElements = document.querySelectorAll(`[data-author="${username}"]`);
         authorElements.forEach(element => {
             const link = element.querySelector('a');
             if (link) {
-                link.textContent = fullName;
+                // Update the full name
+                const textNode = Array.from(link.childNodes).find(node => node.nodeType === Node.TEXT_NODE);
+                if (textNode) {
+                    textNode.textContent = fullName;
+                } else {
+                    link.textContent = fullName;
+                }
+                
+                // Add or update avatar if we have the URL
+                if (avatarUrl) {
+                    let img = link.querySelector('img.author-avatar');
+                    if (!img) {
+                        img = document.createElement('img');
+                        img.className = 'author-avatar';
+                        img.alt = username;
+                        link.insertBefore(img, link.firstChild);
+                    }
+                    img.src = avatarUrl;
+                }
             }
         });
     }
@@ -346,8 +381,8 @@ class GitHubPREnhancer {
             <tr>
                 <td class="author-column">
                     <div class="author-info" data-author="${pr.authorUsername || pr.author}">
-                        ${pr.authorAvatar ? `<img class="author-avatar" src="${pr.authorAvatar}" alt="${pr.author}">` : ''}
                         <a href="${pr.authorProfile || `https://github.com/${pr.author}`}" target="_blank" class="author-link">
+                            ${pr.authorAvatar ? `<img class="author-avatar" src="${pr.authorAvatar}" alt="${pr.author}">` : ''}
                             ${pr.authorFullName || pr.author}
                         </a>
                     </div>

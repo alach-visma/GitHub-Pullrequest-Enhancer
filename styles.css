@@ -60,6 +60,7 @@
   border-radius: 50%;
   margin-right: 8px;
   vertical-align: middle;
+  display: inline-block;
 }
 
 .pr-table-enhanced .author-info {
@@ -70,6 +71,9 @@
 .pr-table-enhanced .author-link {
   color: inherit;
   text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 0;
 }
 
 .pr-table-enhanced .author-link:hover {
